@@ -197,3 +197,5 @@ class TestPet:
             assert response.status_code == expected_status_code, "Код ответа не совпал с ожидаемым"
             if expected_status_code == 200:
                 assert isinstance(response.json(), list)
+            elif expected_status_code == 400:
+                assert isinstance(response.json(), dict)
