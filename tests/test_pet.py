@@ -173,4 +173,29 @@ class TestPet:
         with allure.step("Проверка статуса ответа"):
             assert response.status_code == 404, "Код ответа не совпал с ожидаемым"
 
+    @allure.title("Получение списка питомцев по статусу ")
+    @pytest.mark.parametrize("status, expected_status_code", [
+        ("available", 200),
+        ("sold", 200),
+        ("", 400),
+        ("test",400)
 
+    ])
+    def test_get_pets_by_status(
+            self,
+            status,
+            expected_status_code
+    ):
+        with allure.step("Отправка запроса на получение списка питомцев по статусу"):
+            response = requests.get(
+                url=f"{BASE_URL}/pet/findByStatus", params={
+                    "status": f"{status}"
+                }
+            )
+
+        with allure.step("Проверка статуса ответа и формата данных"):
+            assert response.status_code == expected_status_code, "Код ответа не совпал с ожидаемым"
+            if expected_status_code == 200:
+                assert isinstance(response.json(), list)
+            elif expected_status_code == 400:
+                assert isinstance(response.json(), dict)
